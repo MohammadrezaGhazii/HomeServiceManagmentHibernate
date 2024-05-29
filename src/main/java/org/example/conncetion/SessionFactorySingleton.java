@@ -1,8 +1,6 @@
 package org.example.conncetion;
 
-import org.example.model.Admin;
-import org.example.model.Client;
-import org.example.model.Specialist;
+import org.example.model.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -23,6 +21,8 @@ public class SessionFactorySingleton {
                     .addAnnotatedClass(Admin.class)
                     .addAnnotatedClass(Client.class)
                     .addAnnotatedClass(Specialist.class)
+                    .addAnnotatedClass(CreditClient.class)
+                    .addAnnotatedClass(CreditSpecialist.class)
                     .buildMetadata()
                     .buildSessionFactory();
         }
