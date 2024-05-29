@@ -27,6 +27,8 @@ public class SessionFactorySingleton {
                     .addAnnotatedClass(SubService.class)
                     .addAnnotatedClass(FieldSpecialist.class)
                     .addAnnotatedClass(Order.class)
+                    .addAnnotatedClass(Offer.class)
+                    .addAnnotatedClass(Rate.class)
                     .buildMetadata()
                     .buildSessionFactory();
         }

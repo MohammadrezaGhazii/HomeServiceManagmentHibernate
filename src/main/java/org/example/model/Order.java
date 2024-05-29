@@ -11,6 +11,8 @@ import org.example.enums.OrderSituation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,4 +47,8 @@ public class Order extends BaseEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
+
+    @OneToMany(mappedBy = "order" ,fetch = FetchType.EAGER,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH} )
+    private List<Offer> offers = new ArrayList<>();
 }
