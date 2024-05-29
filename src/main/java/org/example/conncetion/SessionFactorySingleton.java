@@ -23,6 +23,8 @@ public class SessionFactorySingleton {
                     .addAnnotatedClass(Specialist.class)
                     .addAnnotatedClass(CreditClient.class)
                     .addAnnotatedClass(CreditSpecialist.class)
+                    .addAnnotatedClass(Service.class)
+                    .addAnnotatedClass(SubService.class)
                     .buildMetadata()
                     .buildSessionFactory();
         }
