@@ -1,4 +1,4 @@
-package utilities;
+package org.example.utilities;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
