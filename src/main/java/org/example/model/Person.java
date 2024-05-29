@@ -41,6 +41,6 @@ public class Person extends BaseEntity<Long> {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "register_date" , nullable = false)
+    @Column(name = "register_date")
     private LocalDate registerDate;
 }
