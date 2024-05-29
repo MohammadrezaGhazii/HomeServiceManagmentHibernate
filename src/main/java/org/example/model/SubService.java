@@ -1,15 +1,15 @@
 package org.example.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.example.base.entity.BaseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,16 +19,20 @@ import org.example.base.entity.BaseEntity;
 
 @Entity(name = "sub_service")
 public class SubService extends BaseEntity<Long> {
-    @Column(name = "subservice_name" , nullable = false)
+    @Column(name = "subservice_name", nullable = false)
     private String name;
 
-    @Column(name = "base_price" , nullable = false)
+    @Column(name = "base_price", nullable = false)
     private Double basePrice;
 
-    @Column(name = "description" , nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
     @OneToOne
     @JoinColumn(name = "service_id")
     private Service service;
+
+    @OneToMany(mappedBy = "subService", fetch = FetchType.EAGER,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<FieldSpecialist> fieldSpecialists = new ArrayList<>();
 }
