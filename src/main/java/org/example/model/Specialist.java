@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.example.enums.EnableDisable;
 import org.example.enums.SpecialistSituation;
 
 import java.util.ArrayList;
@@ -22,6 +23,10 @@ public class Specialist extends Person {
     @Column(name = "situation", nullable = false)
     @Enumerated(EnumType.STRING)
     private SpecialistSituation situation;
+
+    @Column(name = "account_situation" , nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EnableDisable accountSituation;
 
     @Lob
     @Column(name = "picture", nullable = false)
