@@ -30,7 +30,7 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin, Long, AdminReposito
             session.getTransaction().commit();
             return find;
         } catch (Exception e) {
-            logger.error("An error occurred during student SignIn", e);
+            logger.error("An error occurred during admin SignIn", e);
             return Optional.empty();
         }
     }
