@@ -34,7 +34,7 @@ public class Person extends BaseEntity<Long> {
     private String email;
 
     @Column(name = "phone_number", nullable = false)
-    @Pattern(regexp = "^(\\\\+98|0)?9\\\\d{9}$",
+    @Pattern(regexp = "^(\\+98|0)?9\\d{9}$",
             message = "Enter correct type of Phone number , like : 09121111111 or +989121111111")
     private String phoneNumber;
 
