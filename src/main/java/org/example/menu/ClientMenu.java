@@ -5,10 +5,11 @@ import java.util.Scanner;
 
 public class ClientMenu {
     Scanner scanner = new Scanner(System.in);
-    public void clientMenu() {
+
+    public void clientMenu(String email) {
         int numberInput = -1;
         while (numberInput != 0) {
-            System.out.println("*** ADMIN MENU ***");
+            System.out.println("*** CLIENT MENU ***");
             System.out.println("1-Add new service");
             System.out.println("2-Add new sub-service");
             System.out.println("3-Add new sub-service");
@@ -25,8 +26,10 @@ public class ClientMenu {
             }
 
             switch (numberInput) {
-                case 1 -> {}
-                case 2 -> {}
+                case 1 -> {
+                }
+                case 2 -> {
+                }
                 case 0 -> System.out.println("Returned to previous menu");
                 default -> System.out.println("Wrong input");
             }

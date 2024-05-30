@@ -35,4 +35,15 @@ public class ClientRepositoryImpl extends BaseRepositoryImpl<Client,Long>
 
         return Optional.ofNullable(query.getSingleResult());
     }
+
+    @Override
+    public Optional<Client> clientSignIn(String email , String password) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<Client> query = session.createQuery("FROM client c WHERE" +
+                " c.email=:email AND c.password=:password" , Client.class);
+        query.setParameter("email",email);
+        query.setParameter("password",password);
+
+        return Optional.ofNullable(query.getSingleResult());
+    }
 }

@@ -15,6 +15,7 @@ import java.util.Scanner;
 public class MainMenu {
     Scanner scanner = new Scanner(System.in);
     AdminMenu adminMenu = new AdminMenu();
+    ClientMenu clientMenu = new ClientMenu();
     final AdminService adminService = ApplicationContext.getAdminService();
     final ClientService clientService = ApplicationContext.getClientService();
 
@@ -49,6 +50,8 @@ public class MainMenu {
                 }
                 case 4 -> clientSignUp();
                 case 5 -> {
+                    String email = clientSignIn();
+                    clientMenu.clientMenu(email);
                 }
                 case 0 -> System.out.println("Bye Bye");
                 default -> System.out.println("Wrong input");
@@ -113,6 +116,26 @@ public class MainMenu {
                     .registerDate(localDate)
                     .build();
             clientService.saveOrUpdate(client);
+        }
+    }
+    private String clientSignIn() {
+        String email = "";
+        String password = "";
+        while (true) {
+            System.out.println("Enter your Email :");
+            email = Inputs.getString();
+            System.out.println("Enter your password :");
+            password = Inputs.getString();
+
+            Optional<Client> client = clientService.clientSignIn(email, password);
+
+            if (client.isPresent()) {
+                String name = client.get().getFirstName();
+                System.out.println("Welcome " + name);
+
+                return email;
+            } else
+                System.out.println("Email or password is invalid");
         }
     }
 

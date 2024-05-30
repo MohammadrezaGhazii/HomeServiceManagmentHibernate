@@ -30,7 +30,20 @@ public class ClientServiceImpl extends BaseServiceImpl<Client,Long, ClientReposi
             return find;
         }
         catch (Exception e) {
-//            logger.error("An error occurred during search", e);
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Client> clientSignIn(String email, String password) {
+        try (Session session = sessionFactory.getCurrentSession()) {
+            session.beginTransaction();
+            Optional<Client> find = repository.clientSignIn(email,password);
+            find.orElseThrow(() -> new NotFoundExeption("Entity not found"));
+            session.getTransaction().commit();
+            return find;
+        }
+        catch (Exception e) {
             return Optional.empty();
         }
     }
