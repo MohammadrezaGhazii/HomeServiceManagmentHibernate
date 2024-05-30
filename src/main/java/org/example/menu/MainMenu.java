@@ -2,8 +2,10 @@ package org.example.menu;
 
 import org.example.model.Admin;
 import org.example.model.Client;
+import org.example.model.CreditClient;
 import org.example.service.admin.AdminService;
 import org.example.service.client.ClientService;
+import org.example.service.creditClient.CreditClientService;
 import org.example.utilities.ApplicationContext;
 import org.example.utilities.Validation;
 
@@ -18,6 +20,7 @@ public class MainMenu {
     ClientMenu clientMenu = new ClientMenu();
     final AdminService adminService = ApplicationContext.getAdminService();
     final ClientService clientService = ApplicationContext.getClientService();
+    final CreditClientService creditClientService = ApplicationContext.getCreditClientService();
 
     public void mainMenu() {
         int numberInput = -1;
@@ -98,9 +101,7 @@ public class MainMenu {
         if (clientEmail.isPresent()) {
             System.out.println("This Email SignUp Before !!! -Try another Email or go to SignIn menu");
             mainMenu();
-        }
-        else
-        {
+        } else {
             String password = getValidPassword();
 
             System.out.println("Please enter your phone number :");
@@ -116,8 +117,19 @@ public class MainMenu {
                     .registerDate(localDate)
                     .build();
             clientService.saveOrUpdate(client);
+
+            createCreditClient(client);
         }
     }
+
+    private void createCreditClient(Client client) {
+        CreditClient creditClient = CreditClient.builder()
+                .client(client)
+                .inventory(0)
+                .build();
+        creditClientService.saveOrUpdate(creditClient);
+    }
+
     private String clientSignIn() {
         String email = "";
         String password = "";
