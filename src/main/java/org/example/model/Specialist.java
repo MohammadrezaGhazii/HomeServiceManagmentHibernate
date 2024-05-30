@@ -24,10 +24,6 @@ public class Specialist extends Person {
     @Enumerated(EnumType.STRING)
     private SpecialistSituation situation;
 
-    @Column(name = "account_situation" , nullable = false)
-    @Enumerated(EnumType.STRING)
-    private EnableDisable accountSituation;
-
     @Lob
     @Column(name = "picture", nullable = false)
     private byte[] image;
