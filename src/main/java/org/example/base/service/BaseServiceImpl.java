@@ -1,5 +1,9 @@
 package org.example.base.service;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.example.base.entity.BaseEntity;
 import org.example.base.exception.NotFoundExeption;
 import org.example.base.repository.BaseRepository;
@@ -10,6 +14,7 @@ import org.hibernate.Transaction;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class BaseServiceImpl<T extends BaseEntity<ID>,
         ID extends Serializable,
@@ -18,6 +23,8 @@ public class BaseServiceImpl<T extends BaseEntity<ID>,
 
     protected final R repository;
     private final SessionFactory sessionFactory;
+    ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    Validator validator = validatorFactory.getValidator();
 
     public BaseServiceImpl(R repository, SessionFactory sessionFactory) {
         this.repository = repository;
@@ -25,7 +32,27 @@ public class BaseServiceImpl<T extends BaseEntity<ID>,
     }
 
     @Override
+    public boolean validate(T entity) {
+
+        Set<ConstraintViolation<T>> violations = validator.validate(entity);
+        if (violations.isEmpty())
+            return true;
+        else {
+            System.out.println("Invalid user data found:");
+            for (ConstraintViolation<T> violation : violations) {
+                System.out.println(violation.getMessage());
+            }
+            return false;
+        }
+    }
+
+    @Override
     public T saveOrUpdate(T entity) {
+
+
+        if (!validate(entity))
+            return null;
+
         Transaction transaction = null;
         try (Session session = sessionFactory.getCurrentSession()) {
             transaction = session.beginTransaction();
@@ -36,7 +63,6 @@ public class BaseServiceImpl<T extends BaseEntity<ID>,
         } catch (Exception e) {
             assert transaction != null;
             transaction.rollback();
-            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -64,19 +90,18 @@ public class BaseServiceImpl<T extends BaseEntity<ID>,
             repository.delete(findEntity.get());
             session.getTransaction().commit();
         } catch (Exception ignored) {
-            }
+        }
     }
 
     @Override
     public List<T> findAll() {
-        try (Session session = sessionFactory.getCurrentSession()){
+        try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
             List<T> listAll = repository.findAll();
             session.getTransaction().commit();
             session.close();
             return listAll;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
