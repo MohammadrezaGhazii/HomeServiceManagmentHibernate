@@ -28,7 +28,7 @@ public class SubService extends BaseEntity<Long> {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "service_id")
     private Service service;
 
