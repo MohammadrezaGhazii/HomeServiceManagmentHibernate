@@ -17,6 +17,6 @@ public class SubServiceRepositoryImpl extends BaseRepositoryImpl<SubService, Lon
 
     @Override
     public String getEntity() {
-        return "SubService";
+        return "sub_service";
     }
 }
