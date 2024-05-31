@@ -16,6 +16,6 @@ public class ServiceRepositoryImpl extends BaseRepositoryImpl<Service,Long> impl
 
     @Override
     public String getEntity() {
-        return "Service";
+        return "service";
     }
 }
