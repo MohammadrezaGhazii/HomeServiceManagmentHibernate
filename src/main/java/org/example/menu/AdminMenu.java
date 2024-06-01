@@ -26,7 +26,9 @@ public class AdminMenu {
             System.out.println("4-Add new sub-service");
             System.out.println("5-Update sub-service");
             System.out.println("6-Delete sub-service");
-            System.out.println("7-Confirm Specialist");
+            System.out.println("7-List Services");
+            System.out.println("8-List Sub Services");
+            System.out.println("9-Confirm Specialist");
             System.out.println("0-Exit");
             System.out.println();
             try {
@@ -45,6 +47,9 @@ public class AdminMenu {
                 case 4 -> addSubService();
                 case 5 -> updateSubService();
                 case 6 -> deleteSubService();
+                case 7 -> listService();
+                case 8 -> listSubService();
+                case 9 -> {}
                 case 0 -> System.out.println("Returned to previous menu");
                 default -> System.out.println("Wrong input");
             }
