@@ -18,7 +18,6 @@ public class ClientServiceImpl extends BaseServiceImpl<Client,Long, ClientReposi
         super(repository, sessionFactory);
     }
     private final SessionFactory sessionFactory = SessionFactorySingleton.getInstance();
-    private final Logger logger = LoggerFactory.getLogger(Client.class);
 
     @Override
     public Optional<Client> searchWithEmail(String email) {
