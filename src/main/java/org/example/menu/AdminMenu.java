@@ -16,7 +16,7 @@ public class AdminMenu {
     ServiceService serviceService = ApplicationContext.getServiceService();
     SubServiceService subServiceService = ApplicationContext.getSubServiceService();
 
-    public void adminMenu(String email) {
+    public void adminMenu() {
         int numberInput = -1;
         while (numberInput != 0) {
             System.out.println("*** ADMIN MENU ***");
@@ -49,7 +49,8 @@ public class AdminMenu {
                 case 6 -> deleteSubService();
                 case 7 -> listService();
                 case 8 -> listSubService();
-                case 9 -> {}
+                case 9 -> {
+                }
                 case 0 -> System.out.println("Returned to previous menu");
                 default -> System.out.println("Wrong input");
             }
@@ -133,13 +134,18 @@ public class AdminMenu {
             try {
                 System.out.println("Please enter Sub Service name :");
                 name = Inputs.getString();
-                System.out.println("Please enter Sub Service description :");
-                description = Inputs.getString();
-                System.out.println("Please enter Sub Service base price :");
-                basePrice = Inputs.getDoubleNum();
-                System.out.println("Please enter service ID :");
-                idService = Inputs.getLongNum();
-                validInput = true;
+                if (subServiceService.searchWithName(name).isPresent()) {
+                    System.out.println("This name is Exist");
+                    adminMenu();
+                } else {
+                    System.out.println("Please enter Sub Service description :");
+                    description = Inputs.getString();
+                    System.out.println("Please enter Sub Service base price :");
+                    basePrice = Inputs.getDoubleNum();
+                    System.out.println("Please enter service ID :");
+                    idService = Inputs.getLongNum();
+                    validInput = true;
+                }
             } catch (InputMismatchException e) {
                 System.out.println("Input should be number !!!");
                 scanner.next();
@@ -179,13 +185,18 @@ public class AdminMenu {
                 id = Inputs.getLongNum();
                 System.out.println("Please enter Sub Service name :");
                 name = Inputs.getString();
-                System.out.println("Please enter Sub Service description :");
-                description = Inputs.getString();
-                System.out.println("Please enter Sub Service base price :");
-                basePrice = Inputs.getDoubleNum();
-                System.out.println("Please enter service ID :");
-                idService = Inputs.getLongNum();
-                validInput = true;
+                if (subServiceService.searchWithName(name).isPresent()) {
+                    System.out.println("This name is Exist");
+                    adminMenu();
+                } else {
+                    System.out.println("Please enter Sub Service description :");
+                    description = Inputs.getString();
+                    System.out.println("Please enter Sub Service base price :");
+                    basePrice = Inputs.getDoubleNum();
+                    System.out.println("Please enter service ID :");
+                    idService = Inputs.getLongNum();
+                    validInput = true;
+                }
             } catch (InputMismatchException e) {
                 System.out.println("Input should be number !!!");
                 scanner.next();
@@ -207,7 +218,8 @@ public class AdminMenu {
             }
         }
     }
-    public void deleteSubService(){
+
+    public void deleteSubService() {
         System.out.println("** Delete Sub Service **");
         listSubService();
         Long id = 0L;
