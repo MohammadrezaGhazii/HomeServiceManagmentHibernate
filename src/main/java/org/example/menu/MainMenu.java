@@ -54,7 +54,7 @@ public class MainMenu {
                 case 2 -> specialistSignUp();
                 case 3 -> {
                     String email = specialistSignIn();
-                    specialistMenu.specialistMenu(email);
+                    checkForApprove(email);
                 }
                 case 4 -> clientSignUp();
                 case 5 -> {
@@ -156,6 +156,19 @@ public class MainMenu {
                 return email;
             } else
                 System.out.println("Email or password is invalid");
+        }
+    }
+    private void checkForApprove(String email){
+        Optional<Specialist> specialistOptional = specialistService.searchWithEmail(email);
+        if (specialistOptional.isPresent()){
+            Specialist specialist = specialistOptional.get();
+            if (specialist.getSituation().equals(SpecialistSituation.APPROVED)){
+                specialistMenu.specialistMenu(email);
+            }
+            else {
+                System.out.println("You should wait until admin approve you !");
+                mainMenu();
+            }
         }
     }
 
