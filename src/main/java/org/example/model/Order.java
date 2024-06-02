@@ -40,8 +40,8 @@ public class Order extends BaseEntity<Long> {
     @Column(name = "order_situation")
     private OrderSituation orderSituation;
 
-    @OneToOne
-    @JoinColumn(name = "sub_service_id")
+    @ManyToOne
+    @JoinColumn(name = "subservice_id")
     private SubService subService;
 
     @ManyToOne

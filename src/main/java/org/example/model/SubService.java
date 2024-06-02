@@ -35,4 +35,8 @@ public class SubService extends BaseEntity<Long> {
     @OneToMany(mappedBy = "subService", fetch = FetchType.EAGER,
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<FieldSpecialist> fieldSpecialists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "subService", fetch = FetchType.EAGER,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Order> orders = new ArrayList<>();
 }
