@@ -3,6 +3,7 @@ package org.example.service.specialist;
 import org.example.base.exception.NotFoundExeption;
 import org.example.base.service.BaseServiceImpl;
 import org.example.conncetion.SessionFactorySingleton;
+import org.example.enums.SpecialistSituation;
 import org.example.model.Admin;
 import org.example.model.Client;
 import org.example.model.Specialist;
@@ -14,6 +15,7 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 
 public class SpecialistServiceImpl extends BaseServiceImpl<Specialist, Long, SpecialistRepository>
@@ -49,5 +51,19 @@ public class SpecialistServiceImpl extends BaseServiceImpl<Specialist, Long, Spe
             logger.error("An error occurred during admin SignIn", e);
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Specialist> findSpecialistsBySituation(SpecialistSituation situation) {
+        List<Specialist> find = null;
+        try (Session session = sessionFactory.getCurrentSession()) {
+            session.beginTransaction();
+            find = repository.findSpecialistsBySituation(situation);
+            session.getTransaction().commit();
+        }
+        catch (Exception e) {
+            logger.error("Error occurred while finding Specialists");
+        }
+        return find;
     }
 }

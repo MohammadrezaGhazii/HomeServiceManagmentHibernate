@@ -1,8 +1,13 @@
 package org.example.menu;
 
+import org.example.enums.SpecialistSituation;
+import org.example.model.FieldSpecialist;
 import org.example.model.Service;
+import org.example.model.Specialist;
 import org.example.model.SubService;
+import org.example.service.fieldSpecialist.FieldSpecialistService;
 import org.example.service.service.ServiceService;
+import org.example.service.specialist.SpecialistService;
 import org.example.service.subService.SubServiceService;
 import org.example.utilities.ApplicationContext;
 
@@ -15,6 +20,8 @@ public class AdminMenu {
     Scanner scanner = new Scanner(System.in);
     ServiceService serviceService = ApplicationContext.getServiceService();
     SubServiceService subServiceService = ApplicationContext.getSubServiceService();
+    SpecialistService specialistService = ApplicationContext.getSpecialistService();
+    FieldSpecialistService fieldSpecialistService = ApplicationContext.getFieldSpecialistService();
 
     public void adminMenu() {
         int numberInput = -1;
@@ -28,7 +35,8 @@ public class AdminMenu {
             System.out.println("6-Delete sub-service");
             System.out.println("7-List Services");
             System.out.println("8-List Sub Services");
-            System.out.println("9-Confirm Specialist");
+            System.out.println("9-Confirm Specialist ");
+            System.out.println("10-Add field Specialist");
             System.out.println("0-Exit");
             System.out.println();
             try {
@@ -49,8 +57,8 @@ public class AdminMenu {
                 case 6 -> deleteSubService();
                 case 7 -> listService();
                 case 8 -> listSubService();
-                case 9 -> {
-                }
+                case 9 -> approveSpecialist();
+                case 10 -> addSpecialistField();
                 case 0 -> System.out.println("Returned to previous menu");
                 default -> System.out.println("Wrong input");
             }
@@ -243,6 +251,7 @@ public class AdminMenu {
 
     private void listSubService() {
         List<SubService> allSubServices = subServiceService.findAll();
+        System.out.println("List Sub Services :");
         for (SubService allSubService : allSubServices) {
             System.out.println("| Id Sub Service : " + allSubService.getId() +
                     " | Sub Service name : " + allSubService.getName() +
@@ -253,9 +262,97 @@ public class AdminMenu {
 
     private void listService() {
         List<Service> allServices = serviceService.findAll();
+        System.out.println("List Services :");
         for (Service allService : allServices) {
             System.out.println("| ID Service : " + allService.getId() +
                     " | Name Service : " + allService.getName());
+        }
+    }
+
+    private void approveSpecialist() {
+        listSpecialistNewJoiner();
+
+        Long idSpecialist = 0L;
+        boolean validInput = false;
+
+        while (!validInput) {
+            try {
+                System.out.println("Enter ID Specialist to change him/her Situation : ");
+                idSpecialist = Inputs.getLongNum();
+                validInput = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Input should be number !!!");
+                scanner.next();
+            }
+        }
+
+        Optional<Specialist> byIdSpecialist = specialistService.findById(idSpecialist);
+        if (byIdSpecialist.isPresent()) {
+            Specialist specialist = byIdSpecialist.get();
+            specialist.setSituation(SpecialistSituation.APPROVED);
+            specialistService.saveOrUpdate(specialist);
+        } else {
+            System.out.println("This ID is not avaible");
+            adminMenu();
+        }
+    }
+    private void addSpecialistField(){
+        listSpecialistApproved();
+        listSubService();
+
+        Long idSpecialist = 0L;
+        Long idSubService = 0L;
+        boolean validInput = false;
+
+        while (!validInput) {
+            try {
+                System.out.println("Enter ID Specialist to change him/her Situation : ");
+                idSpecialist = Inputs.getLongNum();
+                System.out.println("Enter ID SubService that Specialist has skill in it : ");
+                idSubService = Inputs.getLongNum();
+                validInput = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Input should be number !!!");
+                scanner.next();
+            }
+        }
+
+        Optional<Specialist> byIdSpecialist = specialistService.findById(idSpecialist);
+        Optional<SubService> byIdSubService = subServiceService.findById(idSubService);
+        if (byIdSpecialist.isPresent() && byIdSubService.isPresent()){
+            Specialist specialist = byIdSpecialist.get();
+            SubService subService = byIdSubService.get();
+
+            FieldSpecialist fieldSpecialist = FieldSpecialist.builder()
+                    .specialist(specialist)
+                    .subService(subService)
+                    .build();
+            fieldSpecialistService.saveOrUpdate(fieldSpecialist);
+        }
+        else {
+            System.out.println("Some thing is wrong !!!");
+            adminMenu();
+        }
+    }
+
+    private void listSpecialistNewJoiner() {
+        List<Specialist> specialistsBySituation = specialistService
+                .findSpecialistsBySituation(SpecialistSituation.NEW_JOINER);
+        System.out.println("Specialists list :");
+        for (Specialist specialist : specialistsBySituation) {
+            System.out.println("| ID specialist : " + specialist.getId() +
+                    " | Name specialist : " + specialist.getFirstName() +
+                    " | Last Name specialist : " + specialist.getLastName());
+        }
+    }
+    private void listSpecialistApproved() {
+        List<Specialist> specialistsBySituation = specialistService
+                .findSpecialistsBySituation(SpecialistSituation.APPROVED);
+        System.out.println("Specialists list :");
+        for (Specialist specialist : specialistsBySituation) {
+            System.out.println("| ID specialist : " + specialist.getId() +
+                    " | Name specialist : " + specialist.getFirstName() +
+                    " | Last Name specialist : " + specialist.getLastName());
         }
     }
 }
