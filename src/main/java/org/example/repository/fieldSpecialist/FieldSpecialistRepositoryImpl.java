@@ -17,6 +17,6 @@ public class FieldSpecialistRepositoryImpl extends BaseRepositoryImpl<FieldSpeci
 
     @Override
     public String getEntity() {
-        return "FieldSpecialist";
+        return "field_specialist";
     }
 }

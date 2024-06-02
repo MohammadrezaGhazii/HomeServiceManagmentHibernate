@@ -37,6 +37,7 @@ public class AdminMenu {
             System.out.println("8-List Sub Services");
             System.out.println("9-Confirm Specialist ");
             System.out.println("10-Add field Specialist");
+            System.out.println("11-Delete field Specialist");
             System.out.println("0-Exit");
             System.out.println();
             try {
@@ -59,6 +60,7 @@ public class AdminMenu {
                 case 8 -> listSubService();
                 case 9 -> approveSpecialist();
                 case 10 -> addSpecialistField();
+                case 11 -> deleteFieldSpecialist();
                 case 0 -> System.out.println("Returned to previous menu");
                 default -> System.out.println("Wrong input");
             }
@@ -296,7 +298,8 @@ public class AdminMenu {
             adminMenu();
         }
     }
-    private void addSpecialistField(){
+
+    private void addSpecialistField() {
         listSpecialistApproved();
         listSubService();
 
@@ -319,7 +322,7 @@ public class AdminMenu {
 
         Optional<Specialist> byIdSpecialist = specialistService.findById(idSpecialist);
         Optional<SubService> byIdSubService = subServiceService.findById(idSubService);
-        if (byIdSpecialist.isPresent() && byIdSubService.isPresent()){
+        if (byIdSpecialist.isPresent() && byIdSubService.isPresent()) {
             Specialist specialist = byIdSpecialist.get();
             SubService subService = byIdSubService.get();
 
@@ -328,10 +331,36 @@ public class AdminMenu {
                     .subService(subService)
                     .build();
             fieldSpecialistService.saveOrUpdate(fieldSpecialist);
-        }
-        else {
+        } else {
             System.out.println("Some thing is wrong !!!");
             adminMenu();
+        }
+    }
+
+    private void deleteFieldSpecialist() {
+        List<FieldSpecialist> all = fieldSpecialistService.findAll();
+        System.out.println("Specialists fields : ");
+        for (FieldSpecialist fieldSpecialist : all) {
+            System.out.println("| ID field specialist : " + fieldSpecialist.getId() +
+                    " | field name : " + fieldSpecialist.getSubService().getName() +
+                    " | specialist name : " + fieldSpecialist.getSpecialist().getFirstName() +
+                    " " + fieldSpecialist.getSpecialist().getLastName());
+        }
+        Long id = 0L;
+        boolean validInput = false;
+
+        while (!validInput) {
+            try {
+                System.out.println("Enter ID field that you want to delete : ");
+                id = Inputs.getLongNum();
+                validInput = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Input should be number !!!");
+                scanner.next();
+            }
+
+            fieldSpecialistService.deleteById(id);
+
         }
     }
 
@@ -345,6 +374,7 @@ public class AdminMenu {
                     " | Last Name specialist : " + specialist.getLastName());
         }
     }
+
     private void listSpecialistApproved() {
         List<Specialist> specialistsBySituation = specialistService
                 .findSpecialistsBySituation(SpecialistSituation.APPROVED);
