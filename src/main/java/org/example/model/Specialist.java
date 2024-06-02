@@ -25,7 +25,7 @@ public class Specialist extends Person {
     private SpecialistSituation situation;
 
     @Lob
-    @Column(name = "picture", nullable = false)
+    @Column(name = "picture")
     private byte[] image;
 
     @Column(name = "score", nullable = false)

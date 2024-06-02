@@ -1,11 +1,12 @@
 package org.example.menu;
 
-import org.example.model.Admin;
-import org.example.model.Client;
-import org.example.model.CreditClient;
+import org.example.enums.SpecialistSituation;
+import org.example.model.*;
 import org.example.service.admin.AdminService;
 import org.example.service.client.ClientService;
 import org.example.service.creditClient.CreditClientService;
+import org.example.service.creditSpecialist.CreditSpecialistService;
+import org.example.service.specialist.SpecialistService;
 import org.example.utilities.ApplicationContext;
 import org.example.utilities.Validation;
 
@@ -18,9 +19,12 @@ public class MainMenu {
     Scanner scanner = new Scanner(System.in);
     AdminMenu adminMenu = new AdminMenu();
     ClientMenu clientMenu = new ClientMenu();
+    SpecialistMenu specialistMenu = new SpecialistMenu();
     final AdminService adminService = ApplicationContext.getAdminService();
     final ClientService clientService = ApplicationContext.getClientService();
     final CreditClientService creditClientService = ApplicationContext.getCreditClientService();
+    final SpecialistService specialistService = ApplicationContext.getSpecialistService();
+    final CreditSpecialistService creditSpecialistService = ApplicationContext.getCreditSpecialistService();
 
     public void mainMenu() {
         int numberInput = -1;
@@ -30,7 +34,7 @@ public class MainMenu {
             System.out.println("2-Specialist Sign up - ثبت نام متخصص");
             System.out.println("3-Specialist Sign in - ورود متخصص");
             System.out.println("4-Customer Sign up - ثبت نام مشتری");
-            System.out.println("5-Customer Sign up - ورود مشتری");
+            System.out.println("5-Customer Sign in - ورود مشتری");
             System.out.println("0-Exit");
             System.out.println();
             try {
@@ -44,12 +48,13 @@ public class MainMenu {
 
             switch (numberInput) {
                 case 1 -> {
-                    String email = adminSignIn();
-                    adminMenu.adminMenu(email);
+                    adminSignIn();
+                    adminMenu.adminMenu();
                 }
-                case 2 -> {
-                }
+                case 2 -> specialistSignUp();
                 case 3 -> {
+                    String email = specialistSignIn();
+                    specialistMenu.specialistMenu(email);
                 }
                 case 4 -> clientSignUp();
                 case 5 -> {
@@ -84,7 +89,74 @@ public class MainMenu {
     }
 
     private void specialistSignUp() {
+        System.out.println("** Register as Specialist **");
+        System.out.println("Please enter your firstname :");
+        String name = Inputs.getString();
 
+        System.out.println("Please enter your lastname :");
+        String lastname = Inputs.getString();
+
+        System.out.println("Please enter your E-Mail :");
+        String email = Inputs.getString();
+        Optional<Specialist> specialistEmail = specialistService.searchWithEmail(email);
+        if (specialistEmail.isPresent()) {
+            System.out.println("This Email SignUp Before !!! -Try another Email or go to SignIn menu");
+            mainMenu();
+        } else {
+            String password = getValidPassword();
+
+            System.out.println("Please enter your phone number :");
+            String phoneNumber = Inputs.getString();
+
+            LocalDate localDate = LocalDate.now();
+
+            double score = 0;
+
+            SpecialistSituation specialistSituation = SpecialistSituation.NEW_JOINER;
+
+            Specialist specialist = Specialist.builder()
+                    .firstName(name)
+                    .lastName(lastname)
+                    .email(email)
+                    .password(password)
+                    .phoneNumber(phoneNumber)
+                    .registerDate(localDate)
+                    .score(score)
+                    .situation(specialistSituation)
+                    .build();
+            specialistService.saveOrUpdate(specialist);
+
+            crediteSpecialist(specialist);
+        }
+    }
+
+    private void crediteSpecialist(Specialist specialist) {
+        CreditSpecialist creditSpecialist = CreditSpecialist.builder()
+                .inventory(0D)
+                .specialist(specialist)
+                .build();
+        creditSpecialistService.saveOrUpdate(creditSpecialist);
+    }
+
+    private String specialistSignIn() {
+        String email = "";
+        String password = "";
+        while (true) {
+            System.out.println("Enter your Email :");
+            email = Inputs.getString();
+            System.out.println("Enter your password :");
+            password = Inputs.getString();
+
+            Optional<Specialist> specialist = specialistService.specialistSignIn(email, password);
+
+            if (specialist.isPresent()) {
+                String name = specialist.get().getFirstName();
+                System.out.println("Welcome " + name);
+
+                return email;
+            } else
+                System.out.println("Email or password is invalid");
+        }
     }
 
     private void clientSignUp() {
@@ -108,6 +180,7 @@ public class MainMenu {
             String phoneNumber = Inputs.getString();
 
             LocalDate localDate = LocalDate.now();
+
             Client client = Client.builder()
                     .firstName(name)
                     .lastName(lastname)

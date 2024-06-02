@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface SpecialistService extends BaseService<Specialist,Long> {
     Optional<Specialist> searchWithEmail(String email);
+    Optional<Specialist> specialistSignIn(String email, String password);
 }
