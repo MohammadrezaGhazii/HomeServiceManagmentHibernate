@@ -1,6 +1,5 @@
 package org.example.menu;
 
-import org.example.model.Client;
 import org.example.model.Specialist;
 import org.example.service.specialist.SpecialistService;
 import org.example.utilities.ApplicationContext;

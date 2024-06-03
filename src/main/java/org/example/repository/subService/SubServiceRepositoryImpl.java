@@ -2,11 +2,13 @@ package org.example.repository.subService;
 
 import org.example.base.repository.BaseRepositoryImpl;
 import org.example.conncetion.SessionFactorySingleton;
+import org.example.model.Service;
 import org.example.model.SubService;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public class SubServiceRepositoryImpl extends BaseRepositoryImpl<SubService, Long>
@@ -34,5 +36,14 @@ public class SubServiceRepositoryImpl extends BaseRepositoryImpl<SubService, Lon
         query.setParameter("name" , name);
 
         return Optional.ofNullable(query.getSingleResult());
+    }
+
+    @Override
+    public List<SubService> searchWithIdService(Service service) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<SubService> query = session.createQuery("FROM sub_service s WHERE s.service=:service");
+        query.setParameter("service",service);
+
+        return query.getResultList();
     }
 }
